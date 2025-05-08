@@ -13,3 +13,4 @@ venv/
 
 # Data – keep big CSVs out of the repo
 /data/*.csv
+!data/sample_tweets.csv 
