@@ -124,3 +124,16 @@ def score_texts(texts, model, tokenizer):
     probas = out.max(-1).values.tolist()
     label_map = {0: "negative", 1: "neutral", 2: "positive"}
     return [(label_map[p], probas[i]) for i, p in enumerate(preds)]
+
+
+def score_texts(texts, model, tokenizer):
+    """Helper used by Streamlit Inference page."""
+    import torch
+    enc = tokenizer(texts, padding=True, truncation=True, return_tensors="pt").to(model.device)
+    with torch.no_grad():
+        out = model(**enc).logits.softmax(-1)
+    preds = out.argmax(-1).tolist()
+    probas = out.max(-1).values.tolist()
+    label_map = {0: "negative", 1: "neutral", 2: "positive"}
+    return [(label_map[p], probas[i]) for i, p in enumerate(preds)]
+
