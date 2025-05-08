@@ -111,3 +111,16 @@ shap_df = (pd.Series(importances, name="importance")
 SHAP_OUT.parent.mkdir(parents=True, exist_ok=True)
 shap_df.to_csv(SHAP_OUT, index=False)
 print(f"✅  Saved SHAP global importances ➜  {SHAP_OUT.resolve()}")
+
+#patch to run_model.py
+
+def score_texts(texts, model, tokenizer):
+    """Helper used by Streamlit Inference page."""
+    import torch
+    enc = tokenizer(texts, padding=True, truncation=True, return_tensors="pt").to(model.device)
+    with torch.no_grad():
+        out = model(**enc).logits.softmax(-1)
+    preds = out.argmax(-1).tolist()
+    probas = out.max(-1).values.tolist()
+    label_map = {0: "negative", 1: "neutral", 2: "positive"}
+    return [(label_map[p], probas[i]) for i, p in enumerate(preds)]

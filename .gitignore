@@ -1,2 +1,15 @@
+# --- Python project ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual‑envs & env files
 venv/
+.venv/
+.env/
+
+# macOS cruft
 .DS_Store
+
+# Data – keep big CSVs out of the repo
+/data/*.csv
